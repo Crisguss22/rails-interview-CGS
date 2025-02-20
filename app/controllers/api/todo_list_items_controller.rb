@@ -7,9 +7,7 @@ module Api
     end
 
     def create
-      todo_list = TodoList.find_by(id: todo_list_items_params[:todo_list_id])
-      return render json: { error: 'TodoList does not exist' }, status: 404 unless todo_list.present?
-
+      todo_list = TodoList.find(todo_list_items_params[:todo_list_id])
       @todo_list_item = TodoListItem.new(todo_list: todo_list, title: todo_list_items_params[:title], description: todo_list_items_params[:description])
       if @todo_list_item.save
         render json: @todo_list_item
@@ -19,18 +17,12 @@ module Api
     end
 
     def show
-      @todo_list_item = TodoListItem.find_by(id: params[:id])
-      if @todo_list_item.present?
-        render json: @todo_list_item
-      else
-        render json: {}, status: 404
-      end
+      @todo_list_item = TodoListItem.find(params[:id])
+      render json: @todo_list_item
     end
 
     def update
-      @todo_list_item = TodoListItem.find_by(id: params[:id])
-      return render json: {}, status: 404 unless @todo_list_item.present?
-
+      @todo_list_item = TodoListItem.find(params[:id])
       @todo_list_item.title = todo_list_items_params[:title] if todo_list_items_params[:title]
       @todo_list_item.description = todo_list_items_params[:description] if todo_list_items_params[:description]
       @todo_list_item.completed = todo_list_items_params[:completed] if todo_list_items_params[:completed]
@@ -45,7 +37,7 @@ module Api
       @todo_list_item = TodoListItem.find_by(id: params[:id])
       status = @todo_list_item&.destroy ? 200 : 400
 
-      render json: {}, status: 
+      render json: {}, status:
     end
 
     private

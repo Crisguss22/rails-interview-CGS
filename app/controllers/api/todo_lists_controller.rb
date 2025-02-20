@@ -16,17 +16,12 @@ module Api
     end
 
     def show
-      @todo_list = TodoList.find_by(id: params[:id])
-      if @todo_list.present?
-        render json: @todo_list
-      else
-        render json: {}, status: 404
-      end
+      @todo_list = TodoList.find(params[:id])
+      render json: @todo_list
     end
 
     def update
-      @todo_list = TodoList.find_by(id: todo_list_params[:id])
-      return render json: {}, status: 404 unless @todo_list.present?
+      @todo_list = TodoList.find(todo_list_params[:id])
 
       @todo_list.name = todo_list_params[:name] if todo_list_params[:name]
       if @todo_list.save
